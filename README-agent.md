@@ -12,7 +12,7 @@ Follow instructions: Understand and adhere to specific directives.
 Use tools: Integrate and utilize external functionalities (like web search, code execution, database queries, or custom Python functions) to perform actions beyond basic text generation.   
 Delegate tasks: Seamlessly hand off responsibilities to other specialized agents, enabling complex multi-agent workflows.   
 
-![agent features](./images/agent features.png)
+![agent features](../images/agent features.png)
 
 ### Key Components and Principles:
 
