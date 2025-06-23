@@ -20,11 +20,11 @@ The SDK is built around a few core primitives, ensuring simplicity while offerin
 
 1. Agents: These are the central entities. Each agent represents an AI model (often an LLM like GPT-4o) equipped with:   
 
-    Instructions: A system prompt defining its behavior and purpose.   
+    - Instructions: A system prompt defining its behavior and purpose.   
 
-    Model: The underlying language model used for reasoning.   
-    
-    Tools: Functions or capabilities it can call to perform actions.   
+    - Model: The underlying language model used for reasoning.   
+
+    - Tools: Functions or capabilities it can call to perform actions.   
  
 2. Handoffs: This mechanism allows agents to delegate tasks to other agents based on their capabilities. When an agent encounters a task outside its scope, it can transfer control to another agent better suited for it, facilitating efficient workflow orchestration and multi-agent collaboration.   
 
