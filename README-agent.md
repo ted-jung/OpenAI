@@ -69,3 +69,15 @@ The OpenAI Agents SDK is suitable for a wide range of applications that require 
 - Any application where an AI needs to understand, act, and potentially collaborate with other AIs or external systems.
 
 In essence, the OpenAI Agents SDK is a powerful and flexible toolkit that allows developers to build sophisticated AI agents that can reason, interact with tools, and collaborate, streamlining the development of real-world AI applications. 
+
+
+
+### Agent
+An agent is an AI model configured with instructions, tools, guardrails, handoffs and more.
+
+It is strongly recommend passing instructions, which is the "system prompt" for the agent. In addition, you can pass handoff_description, which is a human-readable description of the agent, used when the agent is used inside tools/handoffs.
+
+Agents are generic on the context type. The context is a (mutable) object you create. It is passed to tool functions, handoffs, guardrails, etc.
+
+
+![Agent Class](./images/agent-class.png)
