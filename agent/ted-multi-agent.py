@@ -28,6 +28,9 @@ class ReportData(BaseModel):
     short_summary: str
     """A short 2-3 sentence summary of the findings."""
 
+    comparison_other_country: str
+    """comparison to two of three other country"""
+
     markdown_report: str
     """The final report"""
 
@@ -82,6 +85,10 @@ class ResearchManager:
 
         print("\n\n=====REPORT=====\n\n")
         print(f"Report: {report.markdown_report}")
+
+        print("\n\n=====COMPARISON=====\n\n")
+        print(f"Report: {report.comparison_other_country}")
+        
         print("\n\n=====FOLLOW UP QUESTIONS=====\n\n")
         follow_up_questions = "\n".join(report.follow_up_questions)
         print(f"Follow up questions: {follow_up_questions}")
@@ -90,7 +97,7 @@ class ResearchManager:
     async def _plan_searches(self, query: str) -> WebSearchPlan:
         PROMPT = (
             "You are a helpful research assistant. Given a query, come up with a set of web searches "
-            "to perform to best answer the query. Output between 5 and 20 terms to query for."
+            "to perform to best answer the query. Output between 3 and 5 terms to query for."
         )
         
         planner_agent = Agent(
@@ -103,22 +110,26 @@ class ResearchManager:
         self.printer.update_item("planning", "Planning searches...")
         result = await Runner.run(
             planner_agent,
-            f"Query: {query}",
+            f"Query: {query}"
+            ,
         )
+
         self.printer.update_item(
             "planning",
             f"Will perform {len(result.final_output.searches)} searches",
             is_done=True,
         )
+        # the final output casted to given object (list of WebWearchItem[reason, query])
         return result.final_output_as(WebSearchPlan)
 
 
+    # Get outline structure be made by the previous agent & Do a searching
     async def _perform_searches(self, search_plan: WebSearchPlan) -> list[str]:
         with custom_span("Search the web"):
             self.printer.update_item("searching", "Searching...")
             num_completed = 0
 
-            # multiple coroutine background search operations concurrently
+            # Multiple coroutine background search operations concurrently
             tasks = [asyncio.create_task(self._search(item)) for item in search_plan.searches]
             results = []
 
@@ -153,9 +164,11 @@ class ResearchManager:
             "itself."
         )
 
+        # A few model do not support tools
+        # use gpt-4o (!gpt-4.1-nano)
         search_agent = Agent(
             name="Search agent",
-            model="gpt-4.1-nano",
+            model="gpt-4o-mini",
             instructions=INSTRUCTIONS,
             tools=[WebSearchTool()],
             model_settings=ModelSettings(tool_choice="required"),
@@ -218,6 +231,9 @@ class ResearchManager:
         return result.final_output_as(ReportData)
 
 
+# Refresh the information to the Console in real-time.
+# items(Dictionary) having item
+# flush(): apply updated items to console
 
 class Printer:
     def __init__(self, console: Console):
